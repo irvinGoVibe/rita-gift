@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { CHANNEL_NAME, FINAL_SUBSCRIBERS } from "@/lib/constants";
 import { fireBurst } from "@/lib/confetti";
 import { FloatingIcons } from "./FloatingIcons";
-import { PlayIcon } from "./icons";
+import { SilverAward } from "./SilverAward";
 
 export function MomentScreen() {
   useEffect(() => {
@@ -20,12 +20,19 @@ export function MomentScreen() {
       <FloatingIcons variant="moment" />
 
       <motion.div
-        initial={{ scale: 0.6, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-red-600 shadow-[0_18px_48px_-12px_rgba(239,68,68,0.7)]"
+        initial={{ scale: 0.6, opacity: 0, rotate: -8 }}
+        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10"
       >
-        <PlayIcon className="ml-1 h-9 w-9 text-white" />
+        <motion.div
+          animate={{ rotate: [-2, 2, -2] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="drop-shadow-[0_24px_40px_rgba(0,0,0,0.55)]"
+        >
+          <SilverAward size={140} />
+        </motion.div>
+        <div className="pointer-events-none absolute -inset-6 -z-10 rounded-full bg-white/20 blur-3xl" />
       </motion.div>
 
       <motion.div

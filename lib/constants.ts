@@ -1,10 +1,10 @@
 export const CHANNEL_NAME = "Rita Mark";
-export const CHANNEL_HANDLE = "@ritamark";
+export const CHANNEL_HANDLE = "@markofit";
 export const INITIAL_SUBSCRIBERS = "99 999";
 export const FINAL_SUBSCRIBERS = "100 000";
 export const SENDER_NAME = "[Имя]";
 
-export const RITA_YOUTUBE_URL = "https://youtube.com/@ritamark";
+export const RITA_YOUTUBE_URL = "https://www.youtube.com/@markofit";
 
 export const SHARE_TITLE = "Rita Mark - 100 000 на YouTube";
 export const SHARE_TEXT =
@@ -18,10 +18,10 @@ export const OG_DESCRIPTION =
   "Она сделала это. Следующая остановка - 1 000 000.";
 
 export const SCREEN_DURATIONS = {
-  channel: 5000,
+  channel: 1500,
   moment: 5000,
   notNumber: 5000,
-  personal: 5000,
+  personal: 7000,
 } as const;
 
 export type VideoPreview = {
