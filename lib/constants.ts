@@ -10,12 +10,18 @@ export const SHARE_TITLE = "Rita Mark - 100 000 на YouTube";
 export const SHARE_TEXT =
   "Rita Mark набрала 100 000 подписчиков. Следующая остановка - 1 000 000.";
 
-export const PAGE_TITLE = "Rita Mark - открой момент";
-export const PAGE_DESCRIPTION = "Для Rita Mark подготовлен особенный момент";
+export const SITE_URL = "https://100k.ritamark.ru";
+export const SITE_NAME = "Rita Mark 100K";
 
-export const OG_TITLE = "Rita Mark - открой момент";
-export const OG_DESCRIPTION = "Для Rita Mark подготовлен особенный момент";
-export const OG_IMAGE = "/og-rita-gift.jpg";
+export const PAGE_TITLE = "Для Rita Mark есть подарок";
+export const PAGE_DESCRIPTION = "Открой момент";
+
+export const OG_TITLE = "Для Rita Mark есть подарок";
+export const OG_DESCRIPTION = "Открой момент";
+export const OG_IMAGE = "/og-rita-gift.png";
+export const OG_IMAGE_WIDTH = 1200;
+export const OG_IMAGE_HEIGHT = 630;
+export const OG_IMAGE_ALT = "Для Rita Mark есть подарок";
 
 export const GIFT_TITLE = "Для Rita Mark есть подарок";
 export const GIFT_SUBTITLE = "Потяни ленточку вверх, чтобы открыть";
