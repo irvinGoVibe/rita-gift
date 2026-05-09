@@ -1,65 +1,141 @@
-import Image from "next/image";
+"use client";
+
+import { AnimatePresence } from "motion/react";
+import { useCallback, useRef, useState } from "react";
+import { CardScreen } from "@/components/CardScreen";
+import { FinalScreen } from "@/components/FinalScreen";
+import { MomentScreen } from "@/components/MomentScreen";
+import { NotJustNumberScreen } from "@/components/NotJustNumberScreen";
+import { PersonalScreen } from "@/components/PersonalScreen";
+import { ProgressStories, type Screen } from "@/components/ProgressStories";
+import { YoutubeChannelMock } from "@/components/YoutubeChannelMock";
+import { useAutoAdvance } from "@/lib/useAutoAdvance";
+import { SCREEN_DURATIONS } from "@/lib/constants";
+
+const ORDER: Screen[] = [
+  "channel",
+  "moment",
+  "notNumber",
+  "personal",
+  "final",
+];
+
+const SWIPE_THRESHOLD = 60;
 
 export default function Home() {
+  const [screen, setScreen] = useState<Screen>("channel");
+  const [triggered, setTriggered] = useState(false);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  const goTo = useCallback((next: Screen) => setScreen(next), []);
+
+  const goRel = useCallback(
+    (delta: number) => {
+      const idx = ORDER.indexOf(screen);
+      const target = idx + delta;
+      if (target < 0 || target >= ORDER.length) return;
+      const next = ORDER[target];
+      if (screen === "channel" && delta > 0 && !triggered) return;
+      setScreen(next);
+    },
+    [screen, triggered],
+  );
+
+  const handleTrigger = useCallback(() => {
+    setTriggered(true);
+    window.setTimeout(() => setScreen("moment"), SCREEN_DURATIONS.channel);
+  }, []);
+
+  const handleReplay = useCallback(() => {
+    setTriggered(false);
+    setScreen("channel");
+  }, []);
+
+  const advanceDuration =
+    screen === "moment"
+      ? SCREEN_DURATIONS.moment
+      : screen === "notNumber"
+        ? SCREEN_DURATIONS.notNumber
+        : screen === "personal"
+          ? SCREEN_DURATIONS.personal
+          : null;
+
+  const next: Screen | null =
+    screen === "moment"
+      ? "notNumber"
+      : screen === "notNumber"
+        ? "personal"
+        : screen === "personal"
+          ? "final"
+          : null;
+
+  useAutoAdvance(advanceDuration, () => {
+    if (next) goTo(next);
+  });
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    const target = e.target as HTMLElement | null;
+    if (target?.closest("[data-noswipe]")) {
+      touchStart.current = null;
+      return;
+    }
+    touchStart.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    };
+  }, []);
+
+  const onTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const start = touchStart.current;
+      touchStart.current = null;
+      if (!start) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - start.x;
+      const dy = t.clientY - start.y;
+      if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) <= Math.abs(dy)) return;
+      goRel(dx < 0 ? 1 : -1);
+    },
+    [goRel],
+  );
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main
+      className="relative mx-auto flex min-h-[100svh] w-full max-w-[430px] flex-col overflow-hidden bg-neutral-950 text-white shadow-[0_0_40px_rgba(0,0,0,0.6)]"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      <ProgressStories current={screen} triggered={triggered} />
+
+      <div className="relative flex-1">
+        <AnimatePresence mode="wait">
+          {screen === "channel" && (
+            <CardScreen key="channel">
+              <YoutubeChannelMock onTrigger={handleTrigger} />
+            </CardScreen>
+          )}
+          {screen === "moment" && (
+            <CardScreen key="moment">
+              <MomentScreen />
+            </CardScreen>
+          )}
+          {screen === "notNumber" && (
+            <CardScreen key="notNumber">
+              <NotJustNumberScreen />
+            </CardScreen>
+          )}
+          {screen === "personal" && (
+            <CardScreen key="personal">
+              <PersonalScreen />
+            </CardScreen>
+          )}
+          {screen === "final" && (
+            <CardScreen key="final">
+              <FinalScreen onReplay={handleReplay} />
+            </CardScreen>
+          )}
+        </AnimatePresence>
+      </div>
+    </main>
   );
 }
