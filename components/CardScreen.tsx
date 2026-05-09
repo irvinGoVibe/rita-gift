@@ -6,15 +6,26 @@ import type { ReactNode } from "react";
 type Props = {
   children: ReactNode;
   className?: string;
+  skipInitial?: boolean;
+  skipExit?: boolean;
 };
 
-export function CardScreen({ children, className = "" }: Props) {
+const ENTER = { opacity: 0, y: 8, scale: 0.99 };
+const REST = { opacity: 1, y: 0, scale: 1 };
+const LEAVE = { opacity: 0, y: -8, scale: 0.99 };
+
+export function CardScreen({
+  children,
+  className = "",
+  skipInitial = false,
+  skipExit = false,
+}: Props) {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 8, scale: 0.99 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -8, scale: 0.99 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      initial={skipInitial ? false : ENTER}
+      animate={REST}
+      exit={skipExit ? REST : LEAVE}
+      transition={{ duration: skipInitial || skipExit ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
       className={`absolute inset-0 flex flex-col ${className}`}
     >
       {children}

@@ -17,10 +17,17 @@ export const OG_TITLE = "Rita Mark набрала 100 000 подписчиков
 export const OG_DESCRIPTION =
   "Она сделала это. Следующая остановка - 1 000 000.";
 
+export const GIFT_TITLE = "Для Rita Mark есть подарок";
+export const GIFT_SUBTITLE = "Потяни ленточку вверх, чтобы открыть";
+export const GIFT_REVEAL = "100 000";
+export const GIFT_OPENED_TITLE = "Подарок открыт";
+export const GIFT_OPENED_SUBTITLE = "Запускаем поздравление";
+export const GIFT_TRANSITION_MS = 2400;
+
 export const SCREEN_DURATIONS = {
   channel: 1500,
   moment: 5000,
-  notNumber: 5000,
+  notNumber: 8000,
   personal: 7000,
 } as const;
 

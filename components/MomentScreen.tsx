@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { useEffect } from "react";
-import { CHANNEL_NAME, FINAL_SUBSCRIBERS } from "@/lib/constants";
+import { FINAL_SUBSCRIBERS } from "@/lib/constants";
 import { fireBurst } from "@/lib/confetti";
 import { FloatingIcons } from "./FloatingIcons";
 import { SilverAward } from "./SilverAward";

@@ -1,9 +1,10 @@
 "use client";
 
 import { AnimatePresence } from "motion/react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CardScreen } from "@/components/CardScreen";
 import { FinalScreen } from "@/components/FinalScreen";
+import { GiftOpeningScreen } from "@/components/GiftOpeningScreen";
 import { MomentScreen } from "@/components/MomentScreen";
 import { NotJustNumberScreen } from "@/components/NotJustNumberScreen";
 import { PersonalScreen } from "@/components/PersonalScreen";
@@ -23,9 +24,17 @@ const ORDER: Screen[] = [
 const SWIPE_THRESHOLD = 60;
 
 export default function Home() {
+  const [giftOpened, setGiftOpened] = useState(false);
+  const [skipChannelEntry, setSkipChannelEntry] = useState(false);
   const [screen, setScreen] = useState<Screen>("channel");
   const [triggered, setTriggered] = useState(false);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    if (!skipChannelEntry || !giftOpened || screen !== "channel") return;
+    const id = window.setTimeout(() => setSkipChannelEntry(false), 50);
+    return () => window.clearTimeout(id);
+  }, [skipChannelEntry, giftOpened, screen]);
 
   const goTo = useCallback((next: Screen) => setScreen(next), []);
 
@@ -41,6 +50,11 @@ export default function Home() {
     [screen, triggered],
   );
 
+  const handleGiftOpened = useCallback(() => {
+    setSkipChannelEntry(true);
+    setGiftOpened(true);
+  }, []);
+
   const handleTrigger = useCallback(() => {
     setTriggered(true);
     window.setTimeout(() => setScreen("moment"), SCREEN_DURATIONS.channel);
@@ -52,13 +66,15 @@ export default function Home() {
   }, []);
 
   const advanceDuration =
-    screen === "moment"
-      ? SCREEN_DURATIONS.moment
-      : screen === "notNumber"
-        ? SCREEN_DURATIONS.notNumber
-        : screen === "personal"
-          ? SCREEN_DURATIONS.personal
-          : null;
+    !giftOpened
+      ? null
+      : screen === "moment"
+        ? SCREEN_DURATIONS.moment
+        : screen === "notNumber"
+          ? SCREEN_DURATIONS.notNumber
+          : screen === "personal"
+            ? SCREEN_DURATIONS.personal
+            : null;
 
   const next: Screen | null =
     screen === "moment"
@@ -73,17 +89,24 @@ export default function Home() {
     if (next) goTo(next);
   });
 
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    const target = e.target as HTMLElement | null;
-    if (target?.closest("[data-noswipe]")) {
-      touchStart.current = null;
-      return;
-    }
-    touchStart.current = {
-      x: e.touches[0].clientX,
-      y: e.touches[0].clientY,
-    };
-  }, []);
+  const onTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (!giftOpened) {
+        touchStart.current = null;
+        return;
+      }
+      const target = e.target as HTMLElement | null;
+      if (target?.closest("[data-noswipe]")) {
+        touchStart.current = null;
+        return;
+      }
+      touchStart.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+    },
+    [giftOpened],
+  );
 
   const onTouchEnd = useCallback(
     (e: React.TouchEvent) => {
@@ -105,31 +128,36 @@ export default function Home() {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <ProgressStories current={screen} triggered={triggered} />
+      {giftOpened && <ProgressStories current={screen} triggered={triggered} />}
 
       <div className="relative flex-1">
         <AnimatePresence mode="wait">
-          {screen === "channel" && (
-            <CardScreen key="channel">
+          {!giftOpened && (
+            <CardScreen key="gift" skipExit>
+              <GiftOpeningScreen onOpened={handleGiftOpened} />
+            </CardScreen>
+          )}
+          {giftOpened && screen === "channel" && (
+            <CardScreen key="channel" skipInitial={skipChannelEntry}>
               <YoutubeChannelMock onTrigger={handleTrigger} />
             </CardScreen>
           )}
-          {screen === "moment" && (
+          {giftOpened && screen === "moment" && (
             <CardScreen key="moment">
               <MomentScreen />
             </CardScreen>
           )}
-          {screen === "notNumber" && (
+          {giftOpened && screen === "notNumber" && (
             <CardScreen key="notNumber">
               <NotJustNumberScreen />
             </CardScreen>
           )}
-          {screen === "personal" && (
+          {giftOpened && screen === "personal" && (
             <CardScreen key="personal">
               <PersonalScreen />
             </CardScreen>
           )}
-          {screen === "final" && (
+          {giftOpened && screen === "final" && (
             <CardScreen key="final">
               <FinalScreen onReplay={handleReplay} />
             </CardScreen>
