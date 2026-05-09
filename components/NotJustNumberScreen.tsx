@@ -86,7 +86,7 @@ export function NotJustNumberScreen() {
         transition={{ duration: 0.5, delay: 1.7 }}
         className="relative z-10 mt-3 max-w-[320px] text-center text-sm text-neutral-300"
       >
-        Но на самом деле они выбрали твой стиль, твою энергию и твой голос.
+        Но на самом деле они выбрали твой стиль, твою энергию и тебя.
       </motion.p>
     </div>
   );

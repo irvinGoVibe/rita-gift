@@ -52,7 +52,7 @@ export function MomentScreen() {
         transition={{ duration: 0.5, delay: 0.4 }}
         className="relative z-10 mt-6 text-center text-lg font-semibold"
       >
-        {CHANNEL_NAME}, ты сделала это.
+        Рита, ты сделала это!
       </motion.p>
       <motion.p
         initial={{ opacity: 0, y: 12 }}
