@@ -10,12 +10,12 @@ export const SHARE_TITLE = "Rita Mark - 100 000 на YouTube";
 export const SHARE_TEXT =
   "Rita Mark набрала 100 000 подписчиков. Следующая остановка - 1 000 000.";
 
-export const PAGE_TITLE = "Rita Mark - 100 000 на YouTube";
-export const PAGE_DESCRIPTION = "Поздравительная открытка для Rita Mark";
+export const PAGE_TITLE = "Rita Mark - открой момент";
+export const PAGE_DESCRIPTION = "Для Rita Mark подготовлен особенный момент";
 
-export const OG_TITLE = "Rita Mark набрала 100 000 подписчиков";
-export const OG_DESCRIPTION =
-  "Она сделала это. Следующая остановка - 1 000 000.";
+export const OG_TITLE = "Rita Mark - открой момент";
+export const OG_DESCRIPTION = "Для Rita Mark подготовлен особенный момент";
+export const OG_IMAGE = "/og-rita-gift.jpg";
 
 export const GIFT_TITLE = "Для Rita Mark есть подарок";
 export const GIFT_SUBTITLE = "Потяни ленточку вверх, чтобы открыть";

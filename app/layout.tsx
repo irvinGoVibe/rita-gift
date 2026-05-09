@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import {
   OG_DESCRIPTION,
+  OG_IMAGE,
   OG_TITLE,
   PAGE_DESCRIPTION,
   PAGE_TITLE,
@@ -22,14 +23,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: OG_TITLE,
     description: OG_DESCRIPTION,
-    images: ["/og-rita-100k.png"],
+    images: [OG_IMAGE],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: OG_TITLE,
     description: OG_DESCRIPTION,
-    images: ["/og-rita-100k.png"],
+    images: [OG_IMAGE],
   },
 };
 
